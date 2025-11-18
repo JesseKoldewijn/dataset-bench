@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@theme {
+	/* Colors - Light Mode (default) - WCAG AA Compliant */
+	--color-background: hsl(0 0% 100%);
+	--color-foreground: hsl(
+		222.2 47.4% 11.2%
+	); /* Enhanced contrast from 4.9% */
+	--color-card: hsl(0 0% 100%);
+	--color-card-foreground: hsl(222.2 47.4% 11.2%);
+	--color-popover: hsl(0 0% 100%);
+	--color-popover-foreground: hsl(222.2 47.4% 11.2%);
+	--color-primary: hsl(
+		221.2 83.2% 45%
+	); /* Adjusted for better contrast on white */
+	--color-primary-foreground: hsl(0 0% 100%);
+	--color-secondary: hsl(210 40% 96.1%);
+	--color-secondary-foreground: hsl(222.2 47.4% 11.2%);
+	--color-muted: hsl(210 40% 96.1%);
+	--color-muted-foreground: hsl(
+		215.4 16.3% 35%
+	); /* Enhanced from 46.9% for 4.5:1 contrast */
+	--color-accent: hsl(210 40% 96.1%);
+	--color-accent-foreground: hsl(222.2 47.4% 11.2%);
+	--color-destructive: hsl(0 84.2% 45%); /* Adjusted for better contrast */
+	--color-destructive-foreground: hsl(0 0% 100%);
+	--color-border: hsl(
+		214.3 31.8% 85%
+	); /* Slightly darker for better visibility */
+	--color-input: hsl(214.3 31.8% 85%);
+	--color-ring: hsl(221.2 83.2% 45%);
+	--radius: 0.5rem;
+}
+
+.dark {
+	/* Colors - Dark Mode - WCAG AA Compliant */
+	--color-background: hsl(
+		222.2 47.4% 11.2%
+	); /* Lighter than 4.9% for better contrast */
+	--color-foreground: hsl(0 0% 98%);
+	--color-card: hsl(222.2 47.4% 11.2%);
+	--color-card-foreground: hsl(0 0% 98%);
+	--color-popover: hsl(222.2 47.4% 11.2%);
+	--color-popover-foreground: hsl(0 0% 98%);
+	--color-primary: hsl(
+		213 94% 68%
+	); /* Brighter blue for better visibility on dark background */
+	--color-primary-foreground: hsl(222.2 47.4% 11.2%);
+	--color-secondary: hsl(217.2 32.6% 20%); /* Slightly lighter */
+	--color-secondary-foreground: hsl(0 0% 98%);
+	--color-muted: hsl(217.2 32.6% 20%);
+	--color-muted-foreground: hsl(
+		215 20.2% 70%
+	); /* Enhanced from 65.1% for better contrast */
+	--color-accent: hsl(217.2 32.6% 20%);
+	--color-accent-foreground: hsl(0 0% 98%);
+	--color-destructive: hsl(0 84.2% 55%); /* Lighter for dark mode */
+	--color-destructive-foreground: hsl(0 0% 100%);
+	--color-border: hsl(217.2 32.6% 25%); /* Lighter for visibility */
+	--color-input: hsl(217.2 32.6% 25%);
+	--color-ring: hsl(224.3 76.3% 60%);
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+
+	/* Style datetime-local inputs to push calendar to the right */
+	input[type="datetime-local"] {
+		position: relative;
+	}
+
+	/* Hide the default calendar indicator and position it absolutely at the right */
+	input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+		position: absolute;
+		right: 0.75rem;
+		top: 50%;
+		transform: translateY(-50%);
+		cursor: pointer;
+		opacity: 0.7;
+		transition: opacity 0.2s;
+		width: 1rem;
+		height: 1rem;
+	}
+
+	input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+		opacity: 1;
+	}
+
+	/* Dark mode: invert the calendar icon to make it light */
+	.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+		filter: invert(1);
+	}
+
+	/* Add padding to the right to prevent text overlap with calendar icon */
+	input[type="datetime-local"]::-webkit-datetime-edit {
+		padding-right: 2rem;
+	}
+
+	/* Style radio buttons for visibility */
+	input[type="radio"] {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid var(--color-border);
+		border-radius: 50%;
+		outline: none;
+		cursor: pointer;
+		position: relative;
+		transition: all 0.2s ease;
+		background-color: var(--color-background);
+	}
+
+	input[type="radio"]:hover {
+		border-color: var(--color-primary);
+	}
+
+	input[type="radio"]:checked {
+		border-color: var(--color-border);
+		background-color: var(--color-primary);
+	}
+
+	input[type="radio"]:checked::before {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 0.375rem;
+		height: 0.375rem;
+		border-radius: 50%;
+		background-color: var(--color-primary);
+	}
+
+	input[type="radio"]:focus-visible {
+		outline: 2px solid var(--color-ring);
+		outline-offset: 2px;
+	}
+
+	input[type="radio"]:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}

@@ -1,0 +1,52 @@
+{
+	"name": "solid-client",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vinxi dev --port 3002",
+		"build": "vinxi build",
+		"start": "vinxi start --port 3002",
+		"type-check": "tsc --noEmit",
+		"generate-types": "node scripts/generate-types.mjs",
+		"test": "vitest --run",
+		"test:watch": "vitest",
+		"test:ui": "vitest --ui",
+		"test:coverage": "vitest --coverage"
+	},
+	"dependencies": {
+		"@solidjs/meta": "^0.29.4",
+		"@solidjs/router": "^0.15.4",
+		"@solidjs/start": "^1.2.0",
+		"@tanstack/solid-query": "^5.90.13",
+		"chart.js": "^4.5.1",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"date-fns": "^4.1.0",
+		"lucide-solid": "^0.554.0",
+		"openapi-fetch": "^0.15.0",
+		"solid-js": "^1.9.10",
+		"tailwind-merge": "^3.4.0",
+		"vinxi": "^0.5.8"
+	},
+	"devDependencies": {
+		"@solidjs/testing-library": "^0.8.10",
+		"@tailwindcss/postcss": "^4.1.17",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@types/jest-axe": "^3.5.9",
+		"@types/node": "^24.10.1",
+		"@vitest/coverage-v8": "^4.0.10",
+		"@vitest/ui": "^4.0.10",
+		"axe-core": "^4.11.0",
+		"happy-dom": "^20.0.10",
+		"jest-axe": "^10.0.0",
+		"openapi-typescript": "^7.10.1",
+		"tailwindcss": "^4.1.17",
+		"typescript": "^5.9.3",
+		"vite": "^7.2.2",
+		"vite-plugin-solid": "^2.11.10",
+		"vitest": "^4.0.10"
+	},
+	"resolutions": {
+		"vite": "npm:rolldown-vite@latest"
+	}
+}

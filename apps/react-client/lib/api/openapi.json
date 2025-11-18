@@ -1,0 +1,333 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dataset API",
+    "description": "A deterministic time-series dataset generation API with gzip compression support",
+    "license": {
+      "name": ""
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/dataset": {
+      "get": {
+        "tags": [
+          "dataset"
+        ],
+        "summary": "Get dataset with deterministic generation",
+        "description": "This endpoint generates a time-series dataset for the specified date range.\nThe data generation is deterministic, meaning that requesting the same\ntime range will always produce identical data points, even across different requests.",
+        "operationId": "get_dataset",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start of the time range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2024-01-01T00:00:00Z"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End of the time range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2024-01-02T00:00:00Z"
+          },
+          {
+            "name": "points",
+            "in": "query",
+            "description": "Number of data points to generate. Either points or point_by must be specified.",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 100
+          },
+          {
+            "name": "point_by",
+            "in": "query",
+            "description": "Generate points by time unit. Either points or point_by must be specified.",
+            "required": false,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/components/schemas/TimeUnit"
+                }
+              ]
+            },
+            "example": "hours"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date range or parameters"
+          }
+        }
+      }
+    },
+    "/api/health-check": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health check endpoint",
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/timeseries": {
+      "get": {
+        "tags": [
+          "dataset"
+        ],
+        "summary": "Get time-series dataset (alternative endpoint for clarity)",
+        "operationId": "get_timeseries",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Start of the time range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2024-01-01T00:00:00Z"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "End of the time range (ISO 8601 format)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2024-01-02T00:00:00Z"
+          },
+          {
+            "name": "points",
+            "in": "query",
+            "description": "Number of data points to generate. Either points or point_by must be specified.",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 100
+          },
+          {
+            "name": "point_by",
+            "in": "query",
+            "description": "Generate points by time unit. Either points or point_by must be specified.",
+            "required": false,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/components/schemas/TimeUnit"
+                }
+              ]
+            },
+            "example": "hours"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Time series data generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date range or parameters"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DataPoint": {
+        "type": "object",
+        "description": "A single data point in the time series",
+        "required": [
+          "timestamp",
+          "value"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the data point",
+            "example": "2024-01-01T12:00:00Z"
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "description": "Value at this timestamp",
+            "example": 42.5
+          }
+        }
+      },
+      "DatasetQuery": {
+        "type": "object",
+        "description": "Query parameters for dataset requests",
+        "required": [
+          "start",
+          "end"
+        ],
+        "properties": {
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the time range (ISO 8601 format)"
+          },
+          "point_by": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TimeUnit",
+                "description": "Generate points by time unit. Either points or point_by must be specified."
+              }
+            ]
+          },
+          "points": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Number of data points to generate. Either points or point_by must be specified.",
+            "minimum": 0
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the time range (ISO 8601 format)"
+          }
+        }
+      },
+      "DatasetResponse": {
+        "type": "object",
+        "description": "Response containing the generated dataset",
+        "required": [
+          "start",
+          "end",
+          "count",
+          "data"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Number of data points in the dataset",
+            "example": 100,
+            "minimum": 0
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataPoint"
+            },
+            "description": "Array of data points"
+          },
+          "end": {
+            "type": "string",
+            "description": "End of the time range",
+            "example": "2024-01-02T00:00:00Z"
+          },
+          "start": {
+            "type": "string",
+            "description": "Start of the time range",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "description": "Health check response",
+        "required": [
+          "status",
+          "timestamp"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Service status",
+            "example": "healthy"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Current server timestamp",
+            "example": "2024-01-01T12:00:00Z"
+          }
+        }
+      },
+      "TimeUnit": {
+        "type": "string",
+        "description": "Time unit for point generation",
+        "enum": [
+          "minutes",
+          "hours",
+          "days",
+          "weeks",
+          "months"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "health",
+      "description": "Health check endpoints"
+    },
+    {
+      "name": "dataset",
+      "description": "Dataset generation endpoints"
+    }
+  ]
+}
